@@ -1,6 +1,6 @@
 package lab3.hr.fer.zemris.ooup;
 
-import lab3.hr.fer.zemris.ooup.actions.InsertStringAction;
+import lab3.hr.fer.zemris.ooup.actions.*;
 import lab3.hr.fer.zemris.ooup.iterator.PartialLinesIterator;
 import lab3.hr.fer.zemris.ooup.model.ClipboardStackAlternative;
 import lab3.hr.fer.zemris.ooup.model.Location;
@@ -91,79 +91,15 @@ public class TextEditorModel {
     }
 
     public void deleteBefore() {
-        if (cursorLocation.getColumn() == 0) {
-            if (cursorLocation.getLine() != 0) {
-                String newLine = lines.get(cursorLocation.getLine() - 1) + lines.get(cursorLocation.getLine());
-
-                lines.remove(cursorLocation.getLine() - 1);
-                lines.remove(cursorLocation.getLine() - 1);
-                lines.add(cursorLocation.getLine() - 1, newLine);
-
-                moveCursorLeft();   //todo check
-                notifyTextObservers();
-            }
-        } else {
-            String oldLine = lines.get(cursorLocation.getLine());
-            String newLine = oldLine.substring(0, cursorLocation.getColumn() - 1) + oldLine.substring(cursorLocation.getColumn());
-            lines.remove(cursorLocation.getLine());
-            lines.add(cursorLocation.getLine(), newLine);
-
-            moveCursorLeft();
-            notifyTextObservers();
-        }
+        undoManager.push(new DeleteBeforeAction(this)).executeDo();
     }
 
     public void deleteAfter() {
-        if (cursorLocation.getColumn() == lines.get(cursorLocation.getLine()).length()) {
-            if (cursorLocation.getLine() != lines.size() - 1) {
-                String newLine = lines.get(cursorLocation.getLine()) + lines.get(cursorLocation.getLine() + 1);
-
-                lines.remove(cursorLocation.getLine());
-                lines.remove(cursorLocation.getLine());
-                lines.add(cursorLocation.getLine(), newLine);
-
-                notifyTextObservers();
-            }
-        } else {
-            String oldLine = lines.get(cursorLocation.getLine());
-            String newLine = oldLine.substring(0, cursorLocation.getColumn()) + oldLine.substring(cursorLocation.getColumn() + 1);
-            lines.remove(cursorLocation.getLine());
-            lines.add(cursorLocation.getLine(), newLine);
-
-            notifyTextObservers();
-        }
+        undoManager.push(new DeleteAfterAction(this)).executeDo();
     }
 
     public void deleteRange(SelectionRange selectionRange) {
-        selectionRange = selectionRange.copy();
-        selectionRange.swapStartAndEndIfNecessary();
-
-        int sl = selectionRange.getStart().getLine();
-        int sc = selectionRange.getStart().getColumn();
-        int el = selectionRange.getEnd().getLine();
-        int ec = selectionRange.getEnd().getColumn();
-        int newEl = el;
-
-        for (int i = sl + 1; i < el; i++) {
-            lines.remove(sl + 1);
-            newEl--;
-        }
-
-        if (sl + 1 == newEl) {
-            String line = lines.get(sl).substring(0, sc) + lines.get(newEl).substring(ec);
-            lines.remove(sl);
-            lines.remove(sl);
-            lines.add(sl, line);
-        } else {      //sl je isti kao i el
-            String line = lines.get(sl).substring(0, sc) + lines.get(sl).substring(ec);
-            lines.remove(sl);
-            lines.add(sl, line);
-        }
-
-        cursorLocation.setColumn(sc);
-        cursorLocation.setLine(sl);
-        this.selectionRange = null;
-        notifyTextObservers();
+        undoManager.push(new DeleteRangeAction(this)).executeDo();
     }
 
     public SelectionRange getSelectionRange() {
@@ -173,7 +109,6 @@ public class TextEditorModel {
     public void setSelectionRange(SelectionRange range) {
         this.selectionRange = range;
     }
-
 
     public boolean addCursorObserver(CursorObserver cursorObserver) {
         return cursorObservers.add(cursorObserver);
@@ -264,29 +199,14 @@ public class TextEditorModel {
         if (selectionRange != null)
             deleteRange(selectionRange);
 
-        String oldLine = lines.get(cursorLocation.getLine());
-        if (c == 10) {
-            lines.remove(cursorLocation.getLine());
-            lines.add(cursorLocation.getLine(), oldLine.substring(0, cursorLocation.getColumn()));
-            lines.add(cursorLocation.getLine() + 1, oldLine.substring(cursorLocation.getColumn()));
-
-            cursorLocation.setLine(cursorLocation.getLine() + 1);
-            cursorLocation.setColumn(0);
-
-        } else {
-            String newLine = oldLine.substring(0, cursorLocation.getColumn()) + c + oldLine.substring(cursorLocation.getColumn());
-            lines.remove(cursorLocation.getLine());
-            lines.add(cursorLocation.getLine(), newLine);
-            cursorLocation.setColumn(cursorLocation.getColumn() + 1);
-        }
-        notifyTextObservers();
+        undoManager.push(new InsertCharAction(this, c)).executeDo();
     }
 
     void insert(String string) {
         if (selectionRange != null)
             deleteRange(selectionRange);
 
-        UndoManager.getInstance().push(new InsertStringAction(this, string)).executeDo();
+        undoManager.push(new InsertStringAction(this, string)).executeDo();
     }
 
     public void copy() {

@@ -33,7 +33,7 @@ public class UndoManager {
             return;
 
         EditAction editAction = redoStack.pop();
-        editAction.executeUndo();
+        editAction.executeDo();
         undoStack.push(editAction);
     }
 
