@@ -30,7 +30,7 @@ public class DeleteBeforeAction implements EditAction {
                 lines.remove(cursorLocation.getLine() - 1);
                 lines.add(cursorLocation.getLine() - 1, newLine);
 
-                textEditorModel.moveCursorLeft();   //todo check
+                textEditorModel.moveCursorLeft();
                 textEditorModel.notifyTextObservers();
             }
         } else {

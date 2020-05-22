@@ -4,6 +4,8 @@ import lab3.hr.fer.zemris.ooup.actions.*;
 import lab3.hr.fer.zemris.ooup.components.StatusBarComponent;
 import lab3.hr.fer.zemris.ooup.components.TextComponent;
 import lab3.hr.fer.zemris.ooup.model.UndoManager;
+import lab3.hr.fer.zemris.ooup.plugins.PluginAction;
+import lab3.hr.fer.zemris.ooup.plugins.PluginFactory;
 import lombok.Data;
 
 import javax.swing.*;
@@ -56,7 +58,12 @@ public class TextEditor extends JFrame {
 
         createMenus(cp);
         createStatusbar(cp);
+        loadPlugins();
         fireNotifiers();
+    }
+
+    private void loadPlugins() {
+
     }
 
     private void fireNotifiers() {
@@ -176,11 +183,13 @@ public class TextEditor extends JFrame {
 
     private void initInputListeners() {
         textComponent.addKeyListener(new KeyAdapter() {
+
             final List<Integer> usedEvents = List.of(VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_CAPS_LOCK, VK_BACK_SPACE, VK_DELETE, VK_SHIFT, VK_CONTROL, VK_ALT, VK_ALT_GRAPH, VK_ESCAPE, VK_NUM_LOCK);
             final List<Integer> fKeys = List.of(VK_F1, VK_F2, VK_F3, VK_F4, VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10, VK_F11, VK_F12);
 
             @Override
             public void keyPressed(KeyEvent e) {
+//                Character.isDigit(e.getKeyChar()) || Character.isAlphabetic(e.getKeyChar());
                 if (!usedEvents.contains(e.getKeyCode())
                         && !fKeys.contains(e.getKeyCode())
                         && !e.isControlDown())
@@ -249,10 +258,13 @@ public class TextEditor extends JFrame {
         JMenu fileMenu = new JMenu("File");
         JMenu editMenu = new JMenu("Edit");
         JMenu moveMenu = new JMenu("Move");
+        JMenu pluginsMenu = new JMenu("Plugins");
+
 
         mb.add(fileMenu);
         mb.add(editMenu);
         mb.add(moveMenu);
+        mb.add(pluginsMenu);
 
         fileMenu.add(new JMenuItem(new OpenAction("Open", this)));
         fileMenu.add(new JMenuItem(new SaveAction("Save", this)));
@@ -301,6 +313,10 @@ public class TextEditor extends JFrame {
         tb.add(new JButton(pasteAction));
 
         //  cp.add(tb, BorderLayout.PAGE_START);
+
+        for (var pluginName : PluginFactory.availablePlugins()) {
+            pluginsMenu.add(new JMenuItem(new PluginAction(pluginName,textEditorModel)));
+        }
     }
 
     private void createStatusbar(Container cp) {
