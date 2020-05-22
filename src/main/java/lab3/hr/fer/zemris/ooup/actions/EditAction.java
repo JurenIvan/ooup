@@ -1,4 +1,4 @@
-package lab3.hr.fer.zemris.ooup.observers;
+package lab3.hr.fer.zemris.ooup.actions;
 
 public interface EditAction {
 

@@ -1,17 +1,29 @@
 package lab3.hr.fer.zemris.ooup.model;
 
+import lab3.hr.fer.zemris.ooup.observers.ClipboardObserver;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
-public class ClipboardStack extends Stack<String> {
+public class ClipboardStack {
 
-    private Stack<String> texts = new Stack<>();
+    private final Set<ClipboardObserver> clipboardObservers = new HashSet<>();
+    private final Stack<String> texts = new Stack<>();
 
     public String push(String text) {
-        return texts.push(text);
+        boolean wasEmpty = isEmpty();
+        String clipboard = texts.push(text);
+        if (wasEmpty)
+            notifyObservers();
+        return clipboard;
     }
 
     public String pop() {
-        return texts.pop();
+        String clipboard = texts.pop();
+        if (isEmpty())
+            notifyObservers();
+        return clipboard;
     }
 
     public String peek() {
@@ -19,10 +31,23 @@ public class ClipboardStack extends Stack<String> {
     }
 
     public boolean isEmpty() {
-        return texts.size() > 0;
+        return texts.isEmpty();
     }
 
     public void clear() {
         texts.clear();
+        notifyObservers();
+    }
+
+    public void addObserver(ClipboardObserver clipboardObserver) {
+        clipboardObservers.add(clipboardObserver);
+    }
+
+    public void removeObserver(ClipboardObserver clipboardObserver) {
+        clipboardObservers.add(clipboardObserver);
+    }
+
+    public void notifyObservers() {
+        clipboardObservers.forEach(ClipboardObserver::updateClipboard);
     }
 }

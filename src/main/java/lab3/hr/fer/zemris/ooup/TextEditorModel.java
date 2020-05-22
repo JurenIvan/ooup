@@ -2,14 +2,17 @@ package lab3.hr.fer.zemris.ooup;
 
 import lab3.hr.fer.zemris.ooup.actions.*;
 import lab3.hr.fer.zemris.ooup.iterator.PartialLinesIterator;
-import lab3.hr.fer.zemris.ooup.model.ClipboardStackAlternative;
+import lab3.hr.fer.zemris.ooup.model.ClipboardStack;
 import lab3.hr.fer.zemris.ooup.model.Location;
 import lab3.hr.fer.zemris.ooup.model.SelectionRange;
 import lab3.hr.fer.zemris.ooup.model.UndoManager;
+import lab3.hr.fer.zemris.ooup.observers.ClockObserver;
 import lab3.hr.fer.zemris.ooup.observers.CursorObserver;
+import lab3.hr.fer.zemris.ooup.observers.SelectionObserver;
 import lab3.hr.fer.zemris.ooup.observers.TextObserver;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.lang.Math.min;
@@ -20,11 +23,13 @@ public class TextEditorModel {
     private List<String> lines = new ArrayList<>();
     private SelectionRange selectionRange = null;
     private Location cursorLocation = new Location(0, 0);
-    private ClipboardStackAlternative clipboardStack = new ClipboardStackAlternative();
+    private ClipboardStack clipboardStack = new ClipboardStack();
     private UndoManager undoManager = UndoManager.getInstance();
 
     private Set<CursorObserver> cursorObservers = new HashSet<>();
     private Set<TextObserver> textObservers = new HashSet<>();
+    private Set<SelectionObserver> selectionObservers = new HashSet<>();
+    private Set<ClockObserver> clockObservers = new HashSet<>();
 
     public TextEditorModel(String initString) {
         lines.addAll(List.of(initString.split("\n")));
@@ -99,7 +104,7 @@ public class TextEditorModel {
     }
 
     public void deleteRange(SelectionRange selectionRange) {
-        undoManager.push(new DeleteRangeAction(this)).executeDo();
+        undoManager.push(new DeleteRangeAction(this,selectionRange)).executeDo();
     }
 
     public SelectionRange getSelectionRange() {
@@ -108,6 +113,7 @@ public class TextEditorModel {
 
     public void setSelectionRange(SelectionRange range) {
         this.selectionRange = range;
+        notifySelectionObservers();
     }
 
     public boolean addCursorObserver(CursorObserver cursorObserver) {
@@ -145,6 +151,7 @@ public class TextEditorModel {
         }
 
         moveCursorUp();
+        notifySelectionObservers();
     }
 
     public void moveSelectionDown() {
@@ -158,6 +165,7 @@ public class TextEditorModel {
         }
 
         moveCursorDown();
+        notifySelectionObservers();
     }
 
     public void moveSelectionLeft() {
@@ -173,6 +181,7 @@ public class TextEditorModel {
         }
 
         moveCursorLeft();
+        notifySelectionObservers();
     }
 
     public void moveSelectionRight() {
@@ -188,6 +197,7 @@ public class TextEditorModel {
         }
 
         moveCursorRight();
+        notifySelectionObservers();
     }
 
     private void initSelection() {
@@ -228,7 +238,7 @@ public class TextEditorModel {
             insert(clipboardStack.pop());
     }
 
-    private String extractSelection() {
+    public String extractSelection() {
         if (selectionRange == null) return null;
         SelectionRange selectionRange = this.selectionRange.copy();
         selectionRange.swapStartAndEndIfNecessary();
@@ -249,5 +259,34 @@ public class TextEditorModel {
 
         sb.setLength(sb.length() - 1);
         return sb.toString();
+    }
+
+    public void clear() {
+        deleteRange(new SelectionRange(new Location(0,0),new Location(lines.size()-1,lines.get(lines.size()-1).length())));
+        selectionRange = null;
+        cursorLocation = new Location(0, 0);
+        clipboardStack.clear();
+        undoManager.clear();
+    }
+
+    public void addSelectionObserver(SelectionObserver selectionObserver) {
+        selectionObservers.add(selectionObserver);
+    }
+
+    public void removeSelectionObserver(SelectionObserver selectionObserver) {
+        selectionObservers.add(selectionObserver);
+    }
+
+    public void notifySelectionObservers() {
+        selectionObservers.forEach(e -> e.updateSelectionStatus(selectionRange != null));
+    }
+
+    public void addTimeObserver(ClockObserver clockObserver) {
+        clockObservers.add(clockObserver);
+    }
+
+    public void notifyTimeObservers() {
+        LocalDateTime now = LocalDateTime.now();
+        clockObservers.forEach(e -> e.updateTime(now));
     }
 }

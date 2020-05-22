@@ -2,7 +2,6 @@ package lab3.hr.fer.zemris.ooup.actions;
 
 import lab3.hr.fer.zemris.ooup.TextEditorModel;
 import lab3.hr.fer.zemris.ooup.model.SelectionRange;
-import lab3.hr.fer.zemris.ooup.observers.EditAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +12,11 @@ public class DeleteRangeAction implements EditAction {
     private final SelectionRange selectionRange;
     private final List<String> deletedLines = new ArrayList<>();
 
-    public DeleteRangeAction(TextEditorModel textEditorModel) {
+    public DeleteRangeAction(TextEditorModel textEditorModel, SelectionRange selectionRange) {
         this.textEditorModel = textEditorModel;
-        this.selectionRange = textEditorModel.getSelectionRange().copy();
-        selectionRange.swapStartAndEndIfNecessary();
-        textEditorModel.linesRange(selectionRange.getStart().getLine(), selectionRange.getEnd().getLine() + 1).forEachRemaining(deletedLines::add);
+        this.selectionRange = selectionRange.copy();
+        this.selectionRange.swapStartAndEndIfNecessary();
+        textEditorModel.linesRange(this.selectionRange.getStart().getLine(), this.selectionRange.getEnd().getLine() + 1).forEachRemaining(deletedLines::add);
     }
 
     @Override

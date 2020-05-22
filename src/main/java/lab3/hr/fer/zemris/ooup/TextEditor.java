@@ -1,11 +1,15 @@
 package lab3.hr.fer.zemris.ooup;
 
+import lab3.hr.fer.zemris.ooup.actions.*;
+import lab3.hr.fer.zemris.ooup.components.StatusBarComponent;
 import lab3.hr.fer.zemris.ooup.components.TextComponent;
 import lab3.hr.fer.zemris.ooup.model.UndoManager;
+import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 import static java.awt.event.KeyEvent.*;
 import static javax.swing.KeyStroke.getKeyStroke;
 
+@Data
 public class TextEditor extends JFrame {
 
     private static final int DEFAULT_HEIGHT = 800;
@@ -21,6 +26,13 @@ public class TextEditor extends JFrame {
     private final TextEditorModel textEditorModel;
     private final TextComponent textComponent;
     private final UndoManager undoManager = UndoManager.getInstance();
+
+    private Timer timer = new Timer(1000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            textEditorModel.notifyTimeObservers();
+        }
+    });
 
     public TextEditor(TextEditorModel textEditorModel) {
         this.textEditorModel = textEditorModel;
@@ -31,6 +43,7 @@ public class TextEditor extends JFrame {
         setLocationRelativeTo(null);
 
         initGui();
+        timer.start();
     }
 
     private void initGui() {
@@ -40,7 +53,22 @@ public class TextEditor extends JFrame {
         cp.add(textComponent, BorderLayout.CENTER);
 
         setupKeyboardListeners();
+
+        createMenus(cp);
+        createStatusbar(cp);
+        fireNotifiers();
     }
+
+    private void fireNotifiers() {
+        textEditorModel.notifyTimeObservers();
+        textEditorModel.notifyCursorObservers();
+        textEditorModel.notifyTextObservers();
+        textEditorModel.notifySelectionObservers();
+        textEditorModel.getClipboardStack().notifyObservers();
+        textEditorModel.getUndoManager().notifyUndoObservers();
+        textEditorModel.getUndoManager().notifyRedoObservers();
+    }
+
 
     private void setupKeyboardListeners() {
         initCursorListeners();
@@ -77,7 +105,7 @@ public class TextEditor extends JFrame {
         textComponent.getActionMap().put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textEditorModel.moveSelectionUp();
+                textEditorModel.moveCursorUp();
                 textEditorModel.setSelectionRange(null);
             }
         });
@@ -146,12 +174,6 @@ public class TextEditor extends JFrame {
         textEditorModel.addTextObserver(textComponent);
     }
 
-    /**
-     * based on
-     * http://journals.ecs.soton.ac.uk/java/tutorial/post1.0/ui/keylistener.html
-     * <p>
-     * still has bugs (special keys on laptop for example)
-     */
     private void initInputListeners() {
         textComponent.addKeyListener(new KeyAdapter() {
             final List<Integer> usedEvents = List.of(VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_CAPS_LOCK, VK_BACK_SPACE, VK_DELETE, VK_SHIFT, VK_CONTROL, VK_ALT, VK_ALT_GRAPH, VK_ESCAPE, VK_NUM_LOCK);
@@ -217,6 +239,78 @@ public class TextEditor extends JFrame {
                 undoManager.redo();
             }
         });
+    }
+
+
+    private void createMenus(Container cp) {
+        JMenuBar mb = new JMenuBar();
+        setJMenuBar(mb);
+
+        JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
+        JMenu moveMenu = new JMenu("Move");
+
+        mb.add(fileMenu);
+        mb.add(editMenu);
+        mb.add(moveMenu);
+
+        fileMenu.add(new JMenuItem(new OpenAction("Open", this)));
+        fileMenu.add(new JMenuItem(new SaveAction("Save", this)));
+        fileMenu.add(new JMenuItem(new ExitAction("Exit", this)));
+
+        var undoAction = new UndoAction("Undo", this);
+        editMenu.add(new JMenuItem(undoAction));
+        textEditorModel.getUndoManager().addUndoObserver(undoAction);
+
+        var redoAction = new RedoAction("Redo", this);
+        editMenu.add(new JMenuItem(redoAction));
+        textEditorModel.getUndoManager().addRedoObserver(redoAction);
+
+        var cutAction = new CutAction("Cut", this);
+        editMenu.add(new JMenuItem(cutAction));
+        textEditorModel.addSelectionObserver(cutAction);
+
+        var copyAction = new CopyAction("Copy", this);
+        editMenu.add(new JMenuItem(copyAction));
+        textEditorModel.addSelectionObserver(copyAction);
+
+        var pasteAction = new PasteAction("Paste", this);
+        editMenu.add(new JMenuItem(pasteAction));
+        textEditorModel.getClipboardStack().addObserver(pasteAction);
+
+        var pasteAndTakeAction = new PasteAndTakeAction("Paste and take", this);
+        editMenu.add(new JMenuItem(pasteAndTakeAction));
+        textEditorModel.getClipboardStack().addObserver(pasteAndTakeAction);
+
+        var deleteSelection = new DeleteSelectionAction("Delete selection", this);
+        editMenu.add(new JMenuItem(deleteSelection));
+        textEditorModel.addSelectionObserver(deleteSelection);
+
+        editMenu.add(new JMenuItem(new ClearDocument("Clear document", this)));
+
+        moveMenu.add(new JMenuItem(new CursorToStartAction("Cursor to document start", this)));
+        moveMenu.add(new JMenuItem(new CursorToEndAction("Cursor to document end", this)));
+
+
+        JToolBar tb = new JToolBar();
+
+        tb.add(new JButton(undoAction));
+        tb.add(new JButton(redoAction));
+        tb.add(new JButton(copyAction));
+        tb.add(new JButton(cutAction));
+        tb.add(new JButton(pasteAction));
+
+        //  cp.add(tb, BorderLayout.PAGE_START);
+    }
+
+    private void createStatusbar(Container cp) {
+        StatusBarComponent statusBar = new StatusBarComponent(textEditorModel);
+        cp.add(statusBar, BorderLayout.SOUTH);
+
+        textEditorModel.addSelectionObserver(statusBar);
+        textEditorModel.addTextObserver(statusBar);
+        textEditorModel.addCursorObserver(statusBar);
+        textEditorModel.addTimeObserver(statusBar);
     }
 
     @Override

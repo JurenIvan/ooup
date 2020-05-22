@@ -2,8 +2,6 @@ package lab3.hr.fer.zemris.ooup.actions;
 
 import lab3.hr.fer.zemris.ooup.TextEditorModel;
 import lab3.hr.fer.zemris.ooup.model.Location;
-import lab3.hr.fer.zemris.ooup.model.SelectionRange;
-import lab3.hr.fer.zemris.ooup.observers.EditAction;
 
 import java.util.List;
 
