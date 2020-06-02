@@ -3,17 +3,15 @@ package lab4.hr.fer.zemris.ooup.model.shapes;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
-import lab4.hr.fer.zemris.ooup.utils.GeometryUtil;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
-import java.util.List;
-
-import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.*;
+import static java.util.List.of;
+import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromLineSegment;
 
 public class LineSegment extends AbstractGraphicalObject {
 
     public LineSegment(Point startPoint, Point endPoint) {
-        super(List.of(startPoint, endPoint).stream().toArray(Point[]::new));
+        super(of(startPoint, endPoint).toArray(new Point[0]));
     }
 
     public LineSegment() {
@@ -41,7 +39,7 @@ public class LineSegment extends AbstractGraphicalObject {
 
     @Override
     public String getShapeName() {
-        return "Linija";
+        return "Line";
     }
 
     @Override

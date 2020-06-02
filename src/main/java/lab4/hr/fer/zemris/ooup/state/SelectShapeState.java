@@ -3,8 +3,12 @@ package lab4.hr.fer.zemris.ooup.state;
 import lab4.hr.fer.zemris.ooup.DocumentModel;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
+import lab4.hr.fer.zemris.ooup.model.shapes.CompositeShape;
 import lab4.hr.fer.zemris.ooup.model.shapes.GraphicalObject;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.awt.event.KeyEvent.*;
 import static java.lang.Double.MAX_VALUE;
@@ -79,6 +83,18 @@ public class SelectShapeState extends StateAdapter {
                 break;
             case VK_RIGHT:
                 model.getSelectedObjects().forEach(e -> movePoints(e, 5, 0));
+                break;
+            case VK_G:
+                List<GraphicalObject> selectedCopy = new ArrayList<>(model.getSelectedObjects());
+                for (GraphicalObject graphicalObject : selectedCopy) model.removeGraphicalObject(graphicalObject);
+                model.addGraphicalObject(new CompositeShape(selectedCopy));
+                break;
+            case VK_U:
+                if (model.getSelectedObjects().size() != 1 || !(model.getSelectedObjects().get(0) instanceof CompositeShape))
+                    break;
+                List<GraphicalObject> upacked = (((CompositeShape) model.getSelectedObjects().get(0)).getChildren());
+                model.removeGraphicalObject(model.getSelectedObjects().get(0));
+                upacked.forEach(model::addGraphicalObject);
                 break;
         }
         model.notifyListeners();
