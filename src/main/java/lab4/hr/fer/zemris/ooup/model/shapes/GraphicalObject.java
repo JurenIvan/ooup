@@ -1,12 +1,13 @@
-package lab4.hr.fer.zemris.ooup.model;
+package lab4.hr.fer.zemris.ooup.model.shapes;
 
 import lab4.hr.fer.zemris.ooup.listeners.GraphicalObjectListener;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
+import lab4.hr.fer.zemris.ooup.renderer.Renderer;
+import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
-public interface GraphicalObject {
+public interface GraphicalObject{
 
-    // Podrška za uređivanje objekta
     boolean isSelected();
 
     void setSelected(boolean selected);
@@ -23,22 +24,19 @@ public interface GraphicalObject {
 
     double getHotPointDistance(int index, Point mousePoint);
 
-    // Geometrijska operacija nad oblikom
     void translate(Point delta);
 
     Rectangle getBoundingBox();
 
     double selectionDistance(Point mousePoint);
 
-    // Podrška za crtanje (dio mosta)
-//	void render(Renderer r);        //todo later
+	void render(Renderer r);        //todo later
+    void accept(GeometricalObjectVisitor v);
 
-    // Observer za dojavu promjena modelu
     public void addGraphicalObjectListener(GraphicalObjectListener l);
 
     public void removeGraphicalObjectListener(GraphicalObjectListener l);
 
-    // Podrška za prototip (alatna traka, stvaranje objekata u crtežu, ...)
     String getShapeName();
 
     GraphicalObject duplicate();

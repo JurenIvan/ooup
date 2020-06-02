@@ -1,10 +1,14 @@
-package lab4.hr.fer.zemris.ooup.model;
+package lab4.hr.fer.zemris.ooup.model.shapes;
 
-import lab4.hr.fer.zemris.ooup.GeometryUtil;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
+import lab4.hr.fer.zemris.ooup.renderer.Renderer;
+import lab4.hr.fer.zemris.ooup.utils.GeometryUtil;
+import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
 import java.util.List;
+
+import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.*;
 
 public class LineSegment extends AbstractGraphicalObject {
 
@@ -27,7 +31,12 @@ public class LineSegment extends AbstractGraphicalObject {
 
     @Override
     public double selectionDistance(Point mousePoint) {
-        return GeometryUtil.distanceFromLineSegment(getHotPoint(0), getHotPoint(1), mousePoint);
+        return distanceFromLineSegment(getHotPoint(0), getHotPoint(1), mousePoint);
+    }
+
+    @Override
+    public void render(Renderer r) {
+        r.drawLine(getHotPoint(0), getHotPoint(1));
     }
 
     @Override
@@ -38,5 +47,10 @@ public class LineSegment extends AbstractGraphicalObject {
     @Override
     public GraphicalObject duplicate() {
         return new LineSegment(getHotPoint(0), getHotPoint(1));
+    }
+
+    @Override
+    public void accept(GeometricalObjectVisitor v) {
+        v.visit(this);
     }
 }

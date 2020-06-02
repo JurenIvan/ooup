@@ -1,6 +1,6 @@
 package lab4.hr.fer.zemris.ooup.listeners;
 
-import lab4.hr.fer.zemris.ooup.model.GraphicalObject;
+import lab4.hr.fer.zemris.ooup.model.shapes.GraphicalObject;
 
 public interface GraphicalObjectListener {
 

@@ -1,4 +1,4 @@
-package lab4.hr.fer.zemris.ooup;
+package lab4.hr.fer.zemris.ooup.renderer;
 
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 
