@@ -5,6 +5,10 @@ import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
+import java.util.List;
+import java.util.Stack;
+
+import static java.lang.String.format;
 import static java.util.List.of;
 import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromLineSegment;
 
@@ -45,6 +49,16 @@ public class LineSegment extends AbstractGraphicalObject {
     @Override
     public GraphicalObject duplicate() {
         return new LineSegment(getHotPoint(0), getHotPoint(1));
+    }
+
+    @Override
+    public String getShapeID() {
+        return "@LINE";
+    }
+
+    @Override
+    public void load(Stack<GraphicalObject> stack, String data) {
+
     }
 
     @Override

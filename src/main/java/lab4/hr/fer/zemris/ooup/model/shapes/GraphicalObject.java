@@ -6,6 +6,9 @@ import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
+import java.util.List;
+import java.util.Stack;
+
 public interface GraphicalObject{
 
     boolean isSelected();
@@ -41,8 +44,8 @@ public interface GraphicalObject{
 
     GraphicalObject duplicate();
 
-    // Podrška za snimanje i učitavanje
-//	public String getShapeID();      //todo later
-//	public void load(Stack<GraphicalObject> stack, String data);
-//	public void save(List<String> rows);
+//     Podrška za snimanje i učitavanje
+	public String getShapeID();
+	public void load(Stack<GraphicalObject> stack, String data);
+	public void save(List<String> rows);
 }

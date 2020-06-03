@@ -8,8 +8,10 @@ import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static java.lang.Double.MAX_VALUE;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 public class CompositeShape implements GraphicalObject {
@@ -127,6 +129,22 @@ public class CompositeShape implements GraphicalObject {
     @Override
     public GraphicalObject duplicate() {
         return new CompositeShape(children.stream().map(GraphicalObject::duplicate).collect(toList()));
+    }
+
+    @Override
+    public String getShapeID() {
+        return "@COMP";
+    }
+
+    @Override
+    public void load(Stack<GraphicalObject> stack, String data) {
+
+    }
+
+    @Override
+    public void save(List<String> rows) {
+        children.forEach(e -> rows.add(format("%s %d %d %d %d", e.getShapeID(), e.getHotPoint(0).getX(), e.getHotPoint(0).getY(), e.getHotPoint(1).getX(), e.getHotPoint(1).getY())));
+        rows.add(format("%s %d", getShapeName(), children.size()));
     }
 
     public List<GraphicalObject> getChildren() {

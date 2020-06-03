@@ -28,7 +28,8 @@ public class EraserState extends StateAdapter {
                 .flatMap(Collection::stream)
                 .filter(e -> e != null)
                 .forEach(model::removeGraphicalObject);
-        stateManager.setState(new IdleState());
+
+        //   stateManager.setState(new IdleState());
     }
 
     @Override
@@ -44,4 +45,6 @@ public class EraserState extends StateAdapter {
 
         model.notifyListeners();
     }
+
+
 }

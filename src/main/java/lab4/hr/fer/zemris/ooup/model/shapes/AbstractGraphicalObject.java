@@ -6,6 +6,7 @@ import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromPoint;
 
@@ -76,6 +77,11 @@ public abstract class AbstractGraphicalObject implements GraphicalObject {
     @Override
     public void removeGraphicalObjectListener(GraphicalObjectListener graphicalObjectListener) {
         listeners.remove(graphicalObjectListener);
+    }
+
+    @Override
+    public void save(List<String> rows) {
+        rows.add(format("%s %d %d %d %d", getShapeID(), getHotPoint(0).getX(), getHotPoint(0).getY(), getHotPoint(1).getX(), getHotPoint(1).getY()));
     }
 
     public void notifySelectionChanged() {
