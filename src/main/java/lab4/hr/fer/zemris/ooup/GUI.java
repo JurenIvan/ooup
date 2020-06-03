@@ -1,6 +1,7 @@
 package lab4.hr.fer.zemris.ooup;
 
 import lab4.hr.fer.zemris.ooup.actions.AddShapeAction;
+import lab4.hr.fer.zemris.ooup.actions.DeleteShapeAction;
 import lab4.hr.fer.zemris.ooup.actions.SelectShapeAction;
 import lab4.hr.fer.zemris.ooup.components.CanvasComponent;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
@@ -17,8 +18,6 @@ import java.util.List;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.PAGE_START;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
-import static java.awt.event.KeyEvent.VK_UP;
-import static javax.swing.KeyStroke.getKeyStroke;
 
 public class GUI extends JFrame {
 
@@ -94,9 +93,14 @@ public class GUI extends JFrame {
             tb.add(button);
             group.add(button);
         }
-        JToggleButton button = new JToggleButton(new SelectShapeAction(model, stateManager));
-        tb.add(button);
-        group.add(button);
+        JToggleButton selectButton = new JToggleButton(new SelectShapeAction(model, stateManager));
+        tb.add(selectButton);
+        group.add(selectButton);
+
+        JToggleButton deleteButton = new JToggleButton(new DeleteShapeAction(model, stateManager));
+        tb.add(deleteButton);
+        group.add(deleteButton);
+
         tb.setFocusable(false);
         cp.add(tb, PAGE_START);
     }
