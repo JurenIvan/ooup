@@ -14,11 +14,9 @@ public class EraserState extends StateAdapter {
 
     private final List<Point> trail = new LinkedList<>();
     private final DocumentModel model;
-    private final StateManager stateManager;
 
-    public EraserState(DocumentModel model, StateManager stateManager) {
+    public EraserState(DocumentModel model) {
         this.model = model;
-        this.stateManager = stateManager;
     }
 
     @Override
@@ -29,7 +27,7 @@ public class EraserState extends StateAdapter {
                 .filter(e -> e != null)
                 .forEach(model::removeGraphicalObject);
 
-        //   stateManager.setState(new IdleState());
+        trail.clear();
     }
 
     @Override

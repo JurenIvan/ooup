@@ -11,7 +11,7 @@ import lab4.hr.fer.zemris.ooup.state.StateManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
+import java.util.Map;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.PAGE_START;
@@ -24,10 +24,10 @@ public class GUI extends JFrame {
 
     private final DocumentModel model = new DocumentModel();
     private final CanvasComponent canvas = new CanvasComponent(model, this);
-    private final List<GraphicalObject> objects;
+    private final Map<String, GraphicalObject> objects;
     private final StateManager stateManager = new StateManager();
 
-    public GUI(List<GraphicalObject> objects) {
+    public GUI(Map<String, GraphicalObject> objects) {
         this.objects = objects;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -86,7 +86,7 @@ public class GUI extends JFrame {
         JToolBar tb = new JToolBar();
 
         ButtonGroup group = new ButtonGroup();
-        for (GraphicalObject object : objects) {
+        for (GraphicalObject object : objects.values()) {
             JToggleButton button = new JToggleButton(new AddShapeAction(object, model, stateManager));
             tb.add(button);
             group.add(button);
@@ -95,7 +95,7 @@ public class GUI extends JFrame {
         tb.add(selectButton);
         group.add(selectButton);
 
-        JToggleButton deleteButton = new JToggleButton(new DeleteShapeAction(model, stateManager));
+        JToggleButton deleteButton = new JToggleButton(new EraserAction(model, stateManager));
         tb.add(deleteButton);
         group.add(deleteButton);
 
@@ -104,6 +104,9 @@ public class GUI extends JFrame {
 
         JButton saveButton = new JButton(new SaveAction(model, this));
         tb.add(saveButton);
+
+        JButton loadButton = new JButton(new LoadAction(model, this));
+        tb.add(loadButton);
 
 
         tb.setFocusable(false);

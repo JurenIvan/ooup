@@ -4,10 +4,13 @@ import lab4.hr.fer.zemris.ooup.listeners.GraphicalObjectListener;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromPoint;
 
 public abstract class AbstractGraphicalObject implements GraphicalObject {
@@ -82,6 +85,16 @@ public abstract class AbstractGraphicalObject implements GraphicalObject {
     @Override
     public void save(List<String> rows) {
         rows.add(format("%s %d %d %d %d", getShapeID(), getHotPoint(0).getX(), getHotPoint(0).getY(), getHotPoint(1).getX(), getHotPoint(1).getY()));
+    }
+
+    @Override
+    public void load(Stack<GraphicalObject> stack, String data) {
+        List<Integer> splitted = Arrays.stream(data.substring(6).split("\\s+")).filter(e->!e.isBlank()).map(Integer::parseInt).collect(toList());
+        GraphicalObject obj = duplicate();
+
+        obj.setHotPoint(0, new Point(splitted.get(0), splitted.get(1)));
+        obj.setHotPoint(1, new Point(splitted.get(2), splitted.get(3)));
+        stack.push(obj);
     }
 
     public void notifySelectionChanged() {

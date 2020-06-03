@@ -9,10 +9,13 @@ import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.IntStream;
 
 import static java.lang.Double.MAX_VALUE;
+import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.*;
 
 public class CompositeShape implements GraphicalObject {
 
@@ -138,13 +141,16 @@ public class CompositeShape implements GraphicalObject {
 
     @Override
     public void load(Stack<GraphicalObject> stack, String data) {
-
+        CompositeShape copy = (CompositeShape) duplicate();
+        var count = parseInt(data.split("\\s+")[1]);
+        range(0, count).forEach(e -> copy.children.add(e, stack.pop()));
+        stack.push(copy);
     }
 
     @Override
     public void save(List<String> rows) {
         children.forEach(e -> rows.add(format("%s %d %d %d %d", e.getShapeID(), e.getHotPoint(0).getX(), e.getHotPoint(0).getY(), e.getHotPoint(1).getX(), e.getHotPoint(1).getY())));
-        rows.add(format("%s %d", getShapeName(), children.size()));
+        rows.add(format("%s %d", getShapeID(), children.size()));
     }
 
     public List<GraphicalObject> getChildren() {

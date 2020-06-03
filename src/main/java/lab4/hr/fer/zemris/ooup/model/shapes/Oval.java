@@ -7,10 +7,8 @@ import lab4.hr.fer.zemris.ooup.utils.GeometryUtil;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
 import java.util.List;
-import java.util.Stack;
 
 import static java.lang.Math.*;
-import static java.lang.String.format;
 
 public class Oval extends AbstractGraphicalObject {
 
@@ -91,11 +89,6 @@ public class Oval extends AbstractGraphicalObject {
     @Override
     public String getShapeID() {
         return "@OVAL";
-    }
-
-    @Override
-    public void load(Stack<GraphicalObject> stack, String data) {
-
     }
 
     @Override

@@ -1,20 +1,18 @@
 package lab4.hr.fer.zemris.ooup.actions;
 
 import lab4.hr.fer.zemris.ooup.DocumentModel;
-import lab4.hr.fer.zemris.ooup.model.shapes.GraphicalObject;
-import lab4.hr.fer.zemris.ooup.state.AddShapeState;
 import lab4.hr.fer.zemris.ooup.state.EraserState;
 import lab4.hr.fer.zemris.ooup.state.StateManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class DeleteShapeAction extends AbstractAction {
+public class EraserAction extends AbstractAction {
 
-    private DocumentModel model;
-    private StateManager stateManager;
+    private final DocumentModel model;
+    private final StateManager stateManager;
 
-    public DeleteShapeAction(DocumentModel model, StateManager stateManager) {
+    public EraserAction(DocumentModel model, StateManager stateManager) {
         super("Delete");
         this.model = model;
         this.stateManager = stateManager;
@@ -22,6 +20,6 @@ public class DeleteShapeAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        stateManager.setState(new EraserState(model,stateManager));
+        stateManager.setState(new EraserState(model));
     }
 }
