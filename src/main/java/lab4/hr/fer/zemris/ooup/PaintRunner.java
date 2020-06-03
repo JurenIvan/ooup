@@ -10,6 +10,6 @@ import java.util.List;
 public class PaintRunner {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GUI(List.of(new LineSegment(new Point(0,0),new Point(50,50)), new Oval(new Point(0,0),new Point(50,50)))).setVisible(true));
+        SwingUtilities.invokeLater(() -> new GUI(List.of(new LineSegment(new Point(0,0),new Point(50,50)), new Oval(new Point(0,50),new Point(50,0)))).setVisible(true));
     }
 }

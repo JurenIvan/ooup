@@ -73,16 +73,16 @@ public class SelectShapeState extends StateAdapter {
                     model.decreaseZ(model.getSelectedObjects().get(0));
                 break;
             case VK_UP:
-                model.getSelectedObjects().forEach(e -> movePoints(e, 0, -5));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, -5)));
                 break;
             case VK_DOWN:
-                model.getSelectedObjects().forEach(e -> movePoints(e, 0, 5));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, 5)));
                 break;
             case VK_LEFT:
-                model.getSelectedObjects().forEach(e -> movePoints(e, -5, 0));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(-5, 0)));
                 break;
             case VK_RIGHT:
-                model.getSelectedObjects().forEach(e -> movePoints(e, 5, 0));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(5, 0)));
                 break;
             case VK_G:
                 List<GraphicalObject> selectedCopy = new ArrayList<>(model.getSelectedObjects());
@@ -98,11 +98,6 @@ public class SelectShapeState extends StateAdapter {
                 break;
         }
         model.notifyListeners();
-    }
-
-    private void movePoints(GraphicalObject e, int x, int y) {
-        for (int j = 0; j < e.getNumberOfHotPoints(); j++)
-            e.setHotPoint(j, e.getHotPoint(j).translate(new Point(x, y)));
     }
 
     @Override

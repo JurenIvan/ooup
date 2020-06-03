@@ -121,7 +121,7 @@ public class CompositeShape implements GraphicalObject {
 
     @Override
     public String getShapeName() {
-        return "composite";
+        return "Composite";
     }
 
     @Override
