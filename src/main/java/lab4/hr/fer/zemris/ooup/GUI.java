@@ -3,6 +3,7 @@ package lab4.hr.fer.zemris.ooup;
 import lab4.hr.fer.zemris.ooup.actions.AddShapeAction;
 import lab4.hr.fer.zemris.ooup.actions.DeleteShapeAction;
 import lab4.hr.fer.zemris.ooup.actions.SelectShapeAction;
+import lab4.hr.fer.zemris.ooup.actions.SvgExportAction;
 import lab4.hr.fer.zemris.ooup.components.CanvasComponent;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.shapes.GraphicalObject;
@@ -100,6 +101,9 @@ public class GUI extends JFrame {
         JToggleButton deleteButton = new JToggleButton(new DeleteShapeAction(model, stateManager));
         tb.add(deleteButton);
         group.add(deleteButton);
+
+        JButton exportButton = new JButton(new SvgExportAction(model, this));
+        tb.add(exportButton);
 
         tb.setFocusable(false);
         cp.add(tb, PAGE_START);
