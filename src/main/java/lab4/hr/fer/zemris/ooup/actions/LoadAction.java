@@ -36,7 +36,7 @@ public class LoadAction extends AbstractAction {
 
         JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle("Load file");
-        if (jfc.showSaveDialog(gui) != APPROVE_OPTION) {
+        if (jfc.showOpenDialog(gui) != APPROVE_OPTION) {
             showMessageDialog(gui, "Nothing loaded", "Warning", INFORMATION_MESSAGE);
         } else {
             try {
