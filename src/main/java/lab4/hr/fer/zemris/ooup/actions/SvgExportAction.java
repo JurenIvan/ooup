@@ -14,7 +14,7 @@ import static javax.swing.JOptionPane.*;
 public class SvgExportAction extends AbstractAction {
 
     private final GUI gui;
-    private DocumentModel model;
+    private final DocumentModel model;
 
     public SvgExportAction(DocumentModel model, GUI gui) {
         super("SVG Export");

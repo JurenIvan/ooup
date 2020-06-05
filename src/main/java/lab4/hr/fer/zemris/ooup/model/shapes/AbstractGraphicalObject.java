@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 import static java.lang.String.format;
+import static java.util.Arrays.*;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromPoint;
@@ -89,7 +90,7 @@ public abstract class AbstractGraphicalObject implements GraphicalObject {
 
     @Override
     public void load(Stack<GraphicalObject> stack, String data) {
-        List<Integer> splitted = Arrays.stream(data.substring(6).split("\\s+")).filter(e->!e.isBlank()).map(Integer::parseInt).collect(toList());
+        List<Integer> splitted = stream(data.substring(6).split("\\s+")).filter(e->!e.isBlank()).map(Integer::parseInt).collect(toList());
         GraphicalObject obj = duplicate();
 
         obj.setHotPoint(0, new Point(splitted.get(0), splitted.get(1)));

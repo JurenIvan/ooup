@@ -5,12 +5,7 @@ import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
-
 import static java.util.List.of;
-import static java.util.stream.Collectors.toList;
 import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromLineSegment;
 
 public class LineSegment extends AbstractGraphicalObject {

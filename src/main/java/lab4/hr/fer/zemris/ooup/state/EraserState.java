@@ -43,6 +43,4 @@ public class EraserState extends StateAdapter {
 
         model.notifyListeners();
     }
-
-
 }

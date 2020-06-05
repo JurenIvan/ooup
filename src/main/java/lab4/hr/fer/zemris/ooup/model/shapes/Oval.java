@@ -3,12 +3,13 @@ package lab4.hr.fer.zemris.ooup.model.shapes;
 import lab4.hr.fer.zemris.ooup.model.primitives.Point;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.renderer.Renderer;
-import lab4.hr.fer.zemris.ooup.utils.GeometryUtil;
 import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 
 import java.util.List;
 
+import static java.lang.Double.MAX_VALUE;
 import static java.lang.Math.*;
+import static lab4.hr.fer.zemris.ooup.utils.GeometryUtil.distanceFromPoint;
 
 public class Oval extends AbstractGraphicalObject {
 
@@ -27,11 +28,23 @@ public class Oval extends AbstractGraphicalObject {
         Point d = getHotPoint(0);
         Point r = getHotPoint(1);
 
-        return new Rectangle(
-                2 * d.getX() - r.getX(),
-                2 * r.getY() - d.getY(),
-                2 * (r.getX() - d.getX()),
-                2 * (d.getY() - r.getY()));
+        int x, y, width, height;
+
+        x = 2 * d.getX() - r.getX();
+        y = 2 * r.getY() - d.getY();
+        width = 2 * (r.getX() - d.getX());
+        height = 2 * (d.getY() - r.getY());
+
+        if (height < 0) {
+            y = y + height;
+            height = -height;
+        }
+
+        if (width < 0) {
+            x = x + width;
+            width = -width;
+        }
+        return new Rectangle(x, y, width, height);
     }
 
     @Override
@@ -45,9 +58,9 @@ public class Oval extends AbstractGraphicalObject {
         }
         Point[] points = getPoints();
 
-        double min = Double.MAX_VALUE;
+        double min = MAX_VALUE;
         for (Point point : points) {
-            double dist = GeometryUtil.distanceFromPoint(point.getX(), point.getY(), mousePoint.getX(), mousePoint.getY());
+            double dist = distanceFromPoint(point.getX(), point.getY(), mousePoint.getX(), mousePoint.getY());
             if (dist < min)
                 min = dist;
         }

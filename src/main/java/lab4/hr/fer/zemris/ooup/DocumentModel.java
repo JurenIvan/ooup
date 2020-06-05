@@ -47,10 +47,6 @@ public class DocumentModel {
         }
     };
 
-    public DocumentModel() {
-
-    }
-
     public void clear() {
         objects.forEach(e -> e.removeGraphicalObjectListener(goListener));
         objects.clear();
@@ -140,8 +136,7 @@ public class DocumentModel {
     }
 
     public void deselect() {
-        for (int i = 0; i < objects.size(); i++)
-            objects.get(i).setSelected(false);
+        for (GraphicalObject object : objects) object.setSelected(false);
         selectedObjects.clear();
         notifyListeners();
     }

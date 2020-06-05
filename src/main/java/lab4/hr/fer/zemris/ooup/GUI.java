@@ -46,7 +46,6 @@ public class GUI extends JFrame {
         setupKeyboardListeners();
         setMouseListeners();
         createToolbar(cp);
-
     }
 
     private void setMouseListeners() {
@@ -107,7 +106,6 @@ public class GUI extends JFrame {
 
         JButton loadButton = new JButton(new LoadAction(model, this));
         tb.add(loadButton);
-
 
         tb.setFocusable(false);
         cp.add(tb, PAGE_START);

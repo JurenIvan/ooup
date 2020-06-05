@@ -12,10 +12,9 @@ public class StateManager {
         this.currentState = currentState;
     }
 
-    public State setState(State currentState) {
+    public void setState(State currentState) {
         currentState.onLeaving();
         this.currentState = currentState;
-        return currentState;
     }
 
     public State getCurrentState() {

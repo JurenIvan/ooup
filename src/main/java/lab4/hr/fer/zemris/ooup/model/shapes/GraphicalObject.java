@@ -9,7 +9,7 @@ import lab4.hr.fer.zemris.ooup.visitors.GeometricalObjectVisitor;
 import java.util.List;
 import java.util.Stack;
 
-public interface GraphicalObject{
+public interface GraphicalObject {
 
     boolean isSelected();
 
@@ -33,7 +33,8 @@ public interface GraphicalObject{
 
     double selectionDistance(Point mousePoint);
 
-	void render(Renderer r);        //todo later
+    void render(Renderer r);
+
     void accept(GeometricalObjectVisitor v);
 
     public void addGraphicalObjectListener(GraphicalObjectListener l);
@@ -44,8 +45,10 @@ public interface GraphicalObject{
 
     GraphicalObject duplicate();
 
-//     Podrška za snimanje i učitavanje
-	public String getShapeID();
-	public void load(Stack<GraphicalObject> stack, String data);
-	public void save(List<String> rows);
+    //     Podrška za snimanje i učitavanje
+    public String getShapeID();
+
+    public void load(Stack<GraphicalObject> stack, String data);
+
+    public void save(List<String> rows);
 }

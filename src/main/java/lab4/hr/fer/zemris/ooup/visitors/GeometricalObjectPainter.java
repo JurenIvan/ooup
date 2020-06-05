@@ -3,22 +3,17 @@ package lab4.hr.fer.zemris.ooup.visitors;
 import lab4.hr.fer.zemris.ooup.model.primitives.Rectangle;
 import lab4.hr.fer.zemris.ooup.model.shapes.LineSegment;
 import lab4.hr.fer.zemris.ooup.model.shapes.Oval;
-import lab4.hr.fer.zemris.ooup.renderer.G2DRendererImpl;
-import lab4.hr.fer.zemris.ooup.renderer.Renderer;
 
 import java.awt.*;
 
 import static java.awt.Color.BLUE;
 
-
 public class GeometricalObjectPainter implements GeometricalObjectVisitor {
 
     private final Graphics g2d;
-    private Renderer renderer;
 
     public GeometricalObjectPainter(Graphics g2d) {
         this.g2d = g2d;
-        this.renderer = new G2DRendererImpl(g2d);
     }
 
     @Override

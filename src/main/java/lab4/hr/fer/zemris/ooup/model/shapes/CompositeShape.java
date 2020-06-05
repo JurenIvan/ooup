@@ -19,9 +19,9 @@ import static java.util.stream.IntStream.*;
 
 public class CompositeShape implements GraphicalObject {
 
-    private List<GraphicalObject> children;
+    private final List<GraphicalObject> children;
+    private final List<GraphicalObjectListener> listeners = new ArrayList<>();
     private boolean selected;
-    private List<GraphicalObjectListener> listeners = new ArrayList<>();
 
     public CompositeShape(List<GraphicalObject> children) {
         this.children = children;
@@ -70,16 +70,14 @@ public class CompositeShape implements GraphicalObject {
 
     @Override
     public void translate(Point delta) {
-        for (int i = 0; i < children.size(); i++)
-            children.get(i).translate(delta);
+        for (GraphicalObject child : children) child.translate(delta);
         notifyObjectChanged();
     }
 
     @Override
     public Rectangle getBoundingBox() {
         List<Rectangle> rectangles = new ArrayList<>();
-        for (int i = 0; i < children.size(); i++)
-            rectangles.add(children.get(i).getBoundingBox());
+        for (GraphicalObject child : children) rectangles.add(child.getBoundingBox());
 
         if (rectangles.isEmpty())
             return null;
@@ -142,7 +140,7 @@ public class CompositeShape implements GraphicalObject {
     @Override
     public void load(Stack<GraphicalObject> stack, String data) {
         CompositeShape copy = (CompositeShape) duplicate();
-        var count = parseInt(data.split("\\s+")[1]);
+        int count = parseInt(data.split("\\s+")[1]);
         range(0, count).forEach(e -> copy.children.add(e, stack.pop()));
         stack.push(copy);
     }

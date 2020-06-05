@@ -9,8 +9,8 @@ import java.awt.event.ActionEvent;
 
 public class SelectShapeAction extends AbstractAction {
 
-    private DocumentModel model;
-    private StateManager stateManager;
+    private final DocumentModel model;
+    private final StateManager stateManager;
 
     public SelectShapeAction(DocumentModel model, StateManager stateManager) {
         super("Select");

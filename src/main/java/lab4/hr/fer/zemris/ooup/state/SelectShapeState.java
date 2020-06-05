@@ -15,7 +15,9 @@ import static java.lang.Double.MAX_VALUE;
 
 public class SelectShapeState extends StateAdapter {
 
-    private static final int CONST = 3;
+    private static final int DISTANCE_TO_OBJECT = 3;
+    public static final int MOVE_PIXELS = 5;
+
     private final DocumentModel model;
 
     public SelectShapeState(DocumentModel model) {
@@ -73,16 +75,16 @@ public class SelectShapeState extends StateAdapter {
                     model.decreaseZ(model.getSelectedObjects().get(0));
                 break;
             case VK_UP:
-                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, -5)));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, -MOVE_PIXELS)));
                 break;
             case VK_DOWN:
-                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, 5)));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(0, MOVE_PIXELS)));
                 break;
             case VK_LEFT:
-                model.getSelectedObjects().forEach(e -> e.translate(new Point(-5, 0)));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(-MOVE_PIXELS, 0)));
                 break;
             case VK_RIGHT:
-                model.getSelectedObjects().forEach(e -> e.translate(new Point(5, 0)));
+                model.getSelectedObjects().forEach(e -> e.translate(new Point(MOVE_PIXELS, 0)));
                 break;
             case VK_G:
                 List<GraphicalObject> selectedCopy = new ArrayList<>(model.getSelectedObjects());
@@ -92,9 +94,9 @@ public class SelectShapeState extends StateAdapter {
             case VK_U:
                 if (model.getSelectedObjects().size() != 1 || !(model.getSelectedObjects().get(0) instanceof CompositeShape))
                     break;
-                List<GraphicalObject> upacked = (((CompositeShape) model.getSelectedObjects().get(0)).getChildren());
+                List<GraphicalObject> unpacked = (((CompositeShape) model.getSelectedObjects().get(0)).getChildren());
                 model.removeGraphicalObject(model.getSelectedObjects().get(0));
-                upacked.forEach(model::addGraphicalObject);
+                unpacked.forEach(model::addGraphicalObject);
                 break;
         }
         model.notifyListeners();
@@ -104,7 +106,7 @@ public class SelectShapeState extends StateAdapter {
     public void afterDraw(Renderer r, GraphicalObject object) {
         if (!object.isSelected())
             return;
-        drawLittleRectangle(r, object.getBoundingBox());
+        drawRectangle(r, object.getBoundingBox());
     }
 
     @Override
@@ -115,11 +117,11 @@ public class SelectShapeState extends StateAdapter {
         GraphicalObject selected = model.getSelectedObjects().get(0);
         for (int i = 0; i < selected.getNumberOfHotPoints(); i++) {
             Point p = selected.getHotPoint(i);
-            drawLittleRectangle(r, new Rectangle(p.getX() - CONST, p.getY() - CONST, 2 * CONST, 2 * CONST));
+            drawRectangle(r, new Rectangle(p.getX() - DISTANCE_TO_OBJECT, p.getY() - DISTANCE_TO_OBJECT, 2 * DISTANCE_TO_OBJECT, 2 * DISTANCE_TO_OBJECT));
         }
     }
 
-    private void drawLittleRectangle(Renderer r, Rectangle bb) {
+    private void drawRectangle(Renderer r, Rectangle bb) {
         r.drawLine(new Point(bb.getX(), bb.getY()), new Point(bb.getX() + bb.getWidth(), bb.getY()));
         r.drawLine(new Point(bb.getX() + bb.getWidth(), bb.getY()), new Point(bb.getX() + bb.getWidth(), bb.getY() + bb.getHeight()));
         r.drawLine(new Point(bb.getX() + bb.getWidth(), bb.getY() + bb.getHeight()), new Point(bb.getX(), bb.getY() + bb.getHeight()));

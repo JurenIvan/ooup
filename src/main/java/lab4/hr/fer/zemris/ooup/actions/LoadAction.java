@@ -43,6 +43,7 @@ public class LoadAction extends AbstractAction {
                 Stack<GraphicalObject> stack = new Stack<>();
                 List<String> lines = Files.readAllLines(jfc.getSelectedFile().toPath());
                 lines.forEach(e -> prototypes.get(e.substring(0, 5)).load(stack, e));
+                model.clear();
                 stack.forEach(model::addGraphicalObject);
                 model.notifyListeners();
             } catch (IOException ioException) {

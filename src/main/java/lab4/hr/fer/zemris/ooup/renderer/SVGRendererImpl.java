@@ -10,11 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.*;
+import static java.nio.file.Files.*;
 import static java.text.MessageFormat.format;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
 public class SVGRendererImpl implements Renderer {
-    private List lines = new ArrayList<>();
-    private Path path;
+    private final List<String> lines = new ArrayList<>();
+    private final Path path;
 
     public SVGRendererImpl(Path path) {
         this.path = path;
@@ -24,7 +28,7 @@ public class SVGRendererImpl implements Renderer {
 
     public void close() throws IOException {
         lines.add("</svg>");
-        Files.writeString(path, lines.stream().collect(Collectors.joining("\n")).toString());
+        writeString(path, join("\n", lines).toString());
     }
 
     @Override
@@ -34,6 +38,6 @@ public class SVGRendererImpl implements Renderer {
 
     @Override
     public void fillPolygon(Point[] points) {
-        lines.add(format("<polygon points=\"{0}\" style=\"stroke:#FF0000; fill:#0000FF; stroke-width: 1;\"/>", Arrays.stream(points).map(e -> e.getX() + "," + e.getY()).collect(Collectors.joining(" "))));
+        lines.add(format("<polygon points=\"{0}\" style=\"stroke:#FF0000; fill:#0000FF; stroke-width: 1;\"/>", stream(points).map(e -> e.getX() + "," + e.getY()).collect(joining(" "))));
     }
 }

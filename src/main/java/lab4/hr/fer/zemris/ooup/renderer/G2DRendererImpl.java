@@ -24,8 +24,8 @@ public class G2DRendererImpl implements Renderer {
     @Override
     public void fillPolygon(Point[] points) {
         g2d.setColor(BLUE);
-        int x[] = new int[points.length];
-        int y[] = new int[points.length];
+        int[] x = new int[points.length];
+        int[] y = new int[points.length];
 
         for (int i = 0; i < points.length; i++) {
             x[i] = points[i].getX();
